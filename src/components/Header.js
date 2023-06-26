@@ -1,12 +1,22 @@
-import React from 'react'
+import React,{useContext} from 'react'
+import { SidebarContext } from '../contexts/SidebarContext'
+import {BsBag} from "react-icons/bs"
+
 
 const Header = () => {
-  return (
-    <div>
-        <div>Header</div>
-        <div>Open/close sidebar</div>
+  
+  const {isOpen, setIsOpen} = useContext(SidebarContext)
 
-    </div>
+
+  return (
+    <header className='bg-blue-300'>
+        <div>Header</div>
+        <div onClick={() => setIsOpen(!isOpen)} className='cursor-pointer flex relative'>
+          <BsBag className
+          text-2xl/>
+          </div>
+
+    </header>
   )
 }
 
