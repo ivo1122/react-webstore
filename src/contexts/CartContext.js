@@ -3,8 +3,23 @@ import React, { useState, createContext, useEffect } from "react";
 export const CartContext = createContext();
 
 const CartProvider = ({ children }) => {
+  //cart state
   const [cart, setCart] = useState([]);
 
+  //item amount state
+  const [itemAmount, setItemAmount] = useState(0);
+
+  //total price state
+  const [total, setTotal] = useState(0);
+
+  useEffect(() => {
+    const total = cart.reduce((accumulator, currentItem) => {
+      return accumulator + currentItem.price * currentItem.amount;
+    }, 0);
+    setTotal(total);
+  });
+
+  //add to cart
   const addToCart = (product, id) => {
     const newItem = { ...product, amount: 1 };
 
@@ -14,19 +29,84 @@ const CartProvider = ({ children }) => {
     if (cartItem) {
       const newCart = [...cart].map((item) => {
         if (item.id === id) {
-          return { ...item, amount: cartItem.amount + 1 };  //just add the amount
+          return { ...item, amount: cartItem.amount + 1 }; //just add the amount
         } else {
           return item;
         }
       });
-      setCart(newCart)
+      setCart(newCart);
     } else {
-      setCart([...cart, newItem])
+      setCart([...cart, newItem]);
+    }
+  };
+
+  //update item amount
+  useEffect(() => {
+    if (cart) {
+      const amount = cart.reduce((accumulator, currentItem) => {
+        return accumulator + currentItem.amount;
+      }, 0);
+      setItemAmount(amount);
+    }
+  }, [cart]);
+
+  //Remove item from cart
+
+  const removeFromCart = (id) => {
+    const newCart = cart.filter((item) => {
+      return item.id !== id;
+    });
+    setCart(newCart);
+  };
+
+  //Clear cart
+
+  const clearCart = () => {
+    setCart([]);
+  };
+
+  //increase amount
+
+  const plusAmount = (id) => {
+    const cartItem = cart.find((item) => item.id === id);
+    addToCart(cartItem, id);
+  };
+
+  //decrease amount
+
+  const minusAmount = (id) => {
+    const cartItem = cart.find((item) => {
+      return item.id === id;
+    });
+    if (cartItem) {
+      const newCart = cart.map((item) => {
+        if (item.id === id) {
+          return { ...item, amount: cartItem.amount - 1 };
+        } else {
+          return item;
+        }
+      });
+      setCart(newCart);
+    }
+
+    if (cartItem.amount < 2) {
+      removeFromCart(id);
     }
   };
 
   return (
-    <CartContext.Provider value={{cart, addToCart }}>
+    <CartContext.Provider
+      value={{
+        cart,
+        addToCart,
+        removeFromCart,
+        clearCart,
+        plusAmount,
+        minusAmount,
+        itemAmount,
+        total,
+      }}
+    >
       {children}
     </CartContext.Provider>
   );

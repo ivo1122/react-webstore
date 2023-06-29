@@ -1,43 +1,32 @@
 import React, { useContext } from "react";
 import { ProductContext } from "../contexts/ProductContext";
 import Product from "../components/Product";
+import Hero from "../components/Hero";
 
 const Home = () => {
+  //get products from product context
   const { products } = useContext(ProductContext);
 
-  const mensWomens = products.filter(item =>{
-    return item.category === "jewelery" || item.category === "electronics"
-  })
+  const mensWomens = products.filter((item) => {
+    return item.category === "jewelery" || item.category === "electronics";
+  });
 
-  console.log(mensWomens)
+  console.log(mensWomens);
 
-
-  return <div>
-    <section className="py-16">
+  return (
+    <div>
+      <Hero />
+      <section className="py-16">
         <div className="container mx-auto">
-
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 xl:grid-cols-5 gap-[40px] max-w-sm mx-auto md:max-w-none md:mx-0">
-
-                {mensWomens.map(product => {
-                    return (
-                        <Product key = {product.id} product={product}/>
-                    )
-                })}
-
-            </div>
-
-
-
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 xl:grid-cols-5 gap-[40px] max-w-sm mx-auto md:max-w-none md:mx-0">
+            {mensWomens.map((product) => {
+              return <Product key={product.id} product={product} />;
+            })}
+          </div>
         </div>
-
-
-
-
-    </section>
-
-
-
-  </div>;
+      </section>
+    </div>
+  );
 };
 
 export default Home;
